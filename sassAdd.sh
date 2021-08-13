@@ -9,23 +9,9 @@
 #   - if not, create one, add a .scss example file, and add sass -w etcetc to pkg.json
 
 
-pkgJsonExists=false
-pkgJson=$(ls ./ | grep -q "package.json")
 
 # 1. does pkg.json exist in this dir?
-case "$pkgJson" in 
-  "package.json")
-    # echo "Found it!" ;
-    pkgJsonExists=true ; 
-    ;;
-  *) 
-    # echo -e "\npackage.json not found in this directory." ;
-    pkgJsonExists=false;
-    ;;
-esac
-
-
-if $pkgJsonExists; then
+if test -f "package.json"; then
   # 2. is there a sass folder in this dir?
   # TODO:  <13-08-21, jared> #
   # check recursively
@@ -39,7 +25,7 @@ if $pkgJsonExists; then
     echo -e "\n/css created"
   fi
 
-  scriptsLine="$(grep -n '"scripts": {' "$pkgJson" | cut -d : -f 1)" #find line no. containing "scripts: {"
+  scriptsLine="$(grep -n '"scripts": {' "package.json" | cut -d : -f 1)" #find line no. containing "scripts: {"
   sed -i "$(($scriptsLine + 1)) i \"style\": \"sass -w sass:css\"," package.json #add sass watch to the next line
   echo -e "\nsass watch script added!"
   echo -e "try 'yarn style', and have fun editing your sass! :)\n"

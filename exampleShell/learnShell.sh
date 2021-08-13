@@ -69,3 +69,142 @@ echo "Script's PID: $$"
 echo "Num args passed to script: $#"
 echo "All args passed to script: $@"
 echo "Script's arguments separated into diff. variables: $1 $2..."
+
+section "more basics"
+
+#cwd avail. thru pwd command/var
+echo "I'm in $(pwd)" #command
+echo "I'm in $PWD"   #var
+
+# clear screen
+# clear 
+
+
+section "input"
+echo "What's your name?"
+read Name
+echo Hello, $Name!
+
+section conditionals
+#man test for more info on conditionals
+if [ $Name != $USER ]; then
+  echo $Name != username!
+else
+  echo "Your name == your username!"
+fi
+
+# Note: if $Name is empty, bash sees the above condition as:
+# if [ != $USER ]
+# which is invalid syntax
+
+# safe way to handle potentially empty variables in bash:
+#if [ "$Name" != $USER]...
+# --> if [ "" != $USER ]
+
+section "shortcut evals"
+echo "Always executed" || echo "Only executed if first command fails"
+echo "Always executed" && echo "Only executed if first command succeeds"
+
+section "complex conditions"
+if [ "$Name" == "Moosh" ] && [ 10 > 5 ] 
+then
+  echo "Hi Moosh!"
+fi
+
+if [ "$Name" == "yared" ] || [ "$Name" == "yaird" ]
+then
+  echo "Hi yared || yaird!"
+fi 
+
+section regex
+Email=me@example.com
+if [[ "$Email" =~ [a-z]+@[a-z]{2,}\.(com|net|org) ]] #note double brackets
+then
+  echo "valid email!"
+fi
+
+section aliases
+# alias echo='echo arstneoia'
+# echo
+# alias -p
+
+section "shell cmds"
+ls -l ../ | grep "\.lua"
+
+Contents=$(ls ../ | grep "\.lua")
+echo $Contents
+echo -e "\nbegin sass.lua"
+cat "../$Contents"
+echo -e "end sass.lua \n"
+
+echo -e "\nThere are $(ls | wc -l) items in here!"
+
+
+section "subshells"
+(echo "First, I'm here: $PWD") && (cd ~; echo "Then, I'm here: $PWD")
+echo "but, *I'm* here: $PWD"
+
+
+section "case statements"
+echo "What's your fav num?"
+read FavNum
+
+case "$FavNum" in 
+  0) echo "It's a zero :)";;
+  1) echo "A one? Seriously?";;
+  *) echo "Not a binary guy. Respect.";;
+esac
+
+section loops
+
+#awko loop
+for Variable in {1..3}
+do
+  echo "$Variable"
+done
+
+#trad loop
+for ((a=1; a<=3; a++))
+do
+  echo $a
+done
+
+# #cat on file1 and file2
+# for Var in file1 file1
+# do
+#   cat "$Var"
+# done
+
+# #cat each .markdown file
+# for Out in ./*.markdown
+# do
+#   cat "$Out"
+# done 
+
+while [ true ]
+do
+  echo "loop body, etc"
+  break
+done
+
+section functions
+function foo ()
+{
+  echo "fn args in the same form as shell args: $@"
+  echo "args passed to foo: $1 $2..."
+  return 0
+}
+
+foo arg1 arg2 arg3
+# foo "My Name Is " "yaird"
+
+#alternative declaration
+bar () 
+{
+  echo "ez dec LUL"
+  return 0
+}
+
+bar
+
+sed, grep, etc
